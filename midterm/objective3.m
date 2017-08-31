@@ -1,0 +1,12 @@
+function Q=objective3(betaRN, quan1, mcs, X1, p2,inc2, qual1, qual0, R)
+N1 = size(quan1,1); 
+N2 = size(mcs,1); 
+f=X1'*(quan1-X1*betaRN(:,R));
+a1 = betaRN(1,R)+betaRN(4,R)*inc2+betaRN(3,R)*qual1;
+a0 = betaRN(1,R)+betaRN(4,R)*inc2+betaRN(3,R)*qual0;
+h=mcs+(1/2*betaRN(2,R))*(a1.^2-a0.^2)+betaRN(3,R)*p2'*(qual1-qual0);
+g1 = (1/N1)*sum(f);
+g2 = (1/N2)*sum(h);
+W11 = 1/((1/N1)*((sum(f))^2));
+W21 = 1/((1/N2)*((sum(h))^2));
+Q =(N1/(N1+N2))*g1*W11*g1+(N2/(N1+N2))*g2*W21*g2;

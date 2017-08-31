@@ -1,0 +1,210 @@
+\documentclass[11pt]{article}
+
+\usepackage{amsmath}
+\usepackage{geometry}
+\usepackage{epsfig}
+\usepackage{epstopdf}
+\usepackage{lscape}
+\usepackage{pstricks}
+\usepackage{pst-node}
+\usepackage{pstcol}
+\usepackage{pst-grad}
+\usepackage{pst-plot}
+\usepackage{color}
+\usepackage{multicol}
+\usepackage{multirow}
+\usepackage{lscape}
+\usepackage{harvard}
+
+\setcounter{MaxMatrixCols}{10}
+
+\begin{document}
+
+\title{ECN726 \\ MIDTERM}
+\author{Dilsat Dalkiran Ozel}
+\date{November 2013}
+\maketitle
+\section*{PART 1: PROPERTIES OF ESTIMATORS}
+\subsection*{A) 2SLS}
+State 1: Regress each endogenous variable on all instruments and exogenous variables
+\begin{eqnarray}
+x_{1}      &=& z \gamma + r \nonumber \\
+\hat{x_{1}}&=& z\hat{\gamma} \nonumber
+\end{eqnarray}
+where 
+\begin{equation}
+\hat{\gamma} = (z'z)^{-1} z'x_{1} \nonumber
+\end{equation}
+
+Stage 2: Regress $Y$ on $\hat{x}_{1}$ and $x_{2}$ to get $\hat{\beta}_{2SLS}$.
+\begin{eqnarray}
+y                  &=& \hat{x}_{1}\beta_{1}+ x_{2} \beta_{2} + \mu \nonumber \\
+\hat{\beta}_{12SLS}&=& (\hat{x}_{1}'\hat{x}_{1})^{-1}(\hat{x}_{1}'y) \nonumber \\
+                   &=& (\hat{\gamma}'z'z \hat{\gamma})^{-1}(\hat{\gamma}'z'y) \nonumber \\
+                   &=& (\hat{\gamma}'z'z \hat{\gamma})^{-1}[\hat{\gamma}'z'(\hat{x}_{1}\beta_{1}+ x_{2} \beta_{2} + \mu)] \nonumber \\
+                   &=& \beta_{1}+ \beta_{2} (\hat{\gamma}'z'z \hat{\gamma})^{-1} \hat{\gamma}'z'X_{2} + (\hat{\gamma}'z'z \hat{\gamma})^{-1} \hat{\gamma}'z' \mu \nonumber
+\end{eqnarray}
+Now, derive the probability limit of the 2SLS estimator for $\beta_{1}$.
+\begin{eqnarray}
+plim(\hat{\beta}_{12SLS}) &=& \beta_{1}+ \beta_{2}plim \left(\frac{1}{N}x_{1}'P_{z}x_{1}\right)^{-1} plim\left(\frac{1}{N} x_{1}'P_{z}x_{2} \right) \nonumber \\
+                          &+& plim\left(\frac{1}{N}x_{1}'P_{z}x_{1}\right)^{-1}plim \left(\frac{1}{N}x_{1}'P_{z}\mu\right) \nonumber \\
+                          &=& \beta_{1} \label{cons}
+\end{eqnarray}
+Consistency result at (\ref{cons}) follows from the assumptions below. Note that $P_{z}=z(z'z)^{-1}z'$. 
+\\
+Assumptions which are necessary for consistency:
+\begin{equation}
+plim \left( \frac{1}{N}x_{1}'P_{z}\mu \right) = 0
+\end{equation}
+as $Cov(z,\mu)=0$ by validity of z as an instrument.
+\\
+By Law of Large Numbers, 
+\begin{equation}
+plim\left(\frac{1}{N}x_{1}'P_{z}x_{1}\right)^{-1} = 0
+\end{equation}
+as $x_{1}'P_{z}x_{1}$ is finite.
+Lastly and most importantly, to get the consistency result (\ref{cons}), we should have $Cov(z,x_{2})=0$ so that
+\begin{equation}
+plim\left(\frac{1}{N} x_{1}'P_{z}x_{2} \right) = 0
+\end{equation}
+\subsection*{B) Probit Model}
+\subsubsection*{i) Demonstration}
+First of all, we know that Probit model arises if the error term is standard normal. In this model, the first thing we realize that the error term is not standard. Hence, a researcher should convert this distribution to standard normal to use Probit estimation. For that we can use Theorem A17 at the appendix which is called "Product Limit Normal Rule". However, as the question asks us to demonstrate the result, I derived the result by first finding the MLE estimator with the given distribution. With some change of variables, I showed that foc is exactly the same as the foc we have when we had standard normal distribution. Analytically, 
+
+\begin{eqnarray}
+ln L &=& \sum\limits_{i=0}^{N}  y_{i} ln \int_{-\infty}^{X_{i}\beta} \frac{1}{\kappa\sqrt{2\pi}}exp\left( -\frac{1}{2}\frac{z^{2}}{\kappa^{2}}\right) dz \nonumber \\
+     &+& \sum\limits_{i=0}^{N} (1-y_{i})ln \left(1- \int_{-\infty}^{X_{i}\beta}\frac{1}{\kappa\sqrt{2\pi}}exp\left( \frac{-1}{2}\frac{z^{2}}{\kappa^{2}} \right)dz \right) \nonumber
+\end{eqnarray}
+Maximize this by choosing $\beta$:
+\begin{eqnarray}
+foc(\beta) &=& \sum\limits_{i=0}^{N} \dfrac{y_{i}}{\int_{-\infty}^{X_{i}\beta}\frac{1}{\kappa\sqrt{2\pi}}exp\left( -\frac{1}{2}\frac{z^{2}}{\kappa^{2}}\right)dz} \frac{1}{\kappa\sqrt{2\pi}}exp\left( -\frac{1}{2}\frac{(X_{i}\beta)^{2}}{\kappa^{2}}\right)X_{i} \nonumber \\
+           &-& \sum\limits_{i=0}^{N} \dfrac{(1-y_{i})}{1-\int_{-\infty}^{X_{i}\beta}\frac{1}{\kappa\sqrt{2\pi}}exp\left( -\frac{1}{2}\frac{z^{2}}{\kappa^{2}}\right)dz} \frac{1}{\kappa\sqrt{2\pi}}exp\left( -\frac{1}{2}\frac{(X_{i}\beta)^{2}}{\kappa^{2}}\right)X_{i} \nonumber \nonumber \\
+           &=& \left[y_{i}-\int_{-\infty}^{X_{i}\beta}\frac{1}{\kappa\sqrt{2\pi}}exp\left( -\frac{1}{2}\frac{z^{2}}{\kappa^{2}}\right) dz \right]X_{i} \nonumber \\
+           &*& \frac{\dfrac{1}{\kappa \sqrt{2\pi}}exp\left(\frac{-1}{2}\left(X_{i}\frac{\beta}{\kappa}\right)\right)^2}{\int_{-\infty}^{X_{i}\beta}\frac{1}{\kappa\sqrt{2\pi}}exp\left( -\frac{1}{2}\frac{z^{2}}{\kappa^{2}}\right)dz \left(1-\int_{-\infty}^{X_{i}\beta}\frac{1}{\kappa\sqrt{2\pi}}exp\left( -\frac{1}{2}\frac{z^{2}}{\kappa^{2}}\right)dz\right)} \nonumber
+\end{eqnarray}
+Now, make change of variables: Let $\tilde{z}=\dfrac{z}{\kappa}$. Then, $d\tilde{z}=\dfrac{dz}{\kappa}$ and $X_{i}\beta=\tilde{z}\kappa$. Also recall that $\kappa \neq 1$.
+\\
+By changing of variables and after some simplifications we get exactly the same foc of $\tilde{\beta}=\frac{\beta}{\kappa}$ of a Probit estimation with standard normal distribution, which is
+\begin{equation}
+\sum\limits_{i=0}^{N}\frac{\frac{1}{\sqrt{2\pi}}exp\left( -\frac{X_{i}\tilde{\beta}}{2}\right)}{\int_{-\infty}^{X_{i}\tilde{\beta}}\frac{1}{\kappa\sqrt{2\pi}}exp\left( -\frac{1}{2}\frac{z^{2}}{\kappa^{2}}\right)dz \left(1-\int_{-\infty}^{X_{i}\tilde{\beta}}\frac{1}{\kappa\sqrt{2\pi}}exp\left( -\frac{1}{2}\frac{z^{2}}{\kappa^{2}}\right)dz\right)}\left[y_{i}-\int_{-\infty}^{X_{i}\tilde{\beta}}\frac{1}{\kappa\sqrt{2\pi}}exp\left( -\frac{1}{2}\frac{z^{2}}{\kappa^{2}}\right)dz \right]X_{i} \nonumber
+\end{equation}
+
+\subsubsection*{ii) Identification}
+Identification of a single-index model requires some restrictions on the variance of error term as the single-index model can only identify $\beta$ up to a scale (page 476, CT). Hence, for example, placing a restriction that $v(u)=1$ secures uniqueness of $\beta$. However, the "problem" is not the unobserved variable itself. If there is an unobserved variable in the model, Probit model is a method to estimate these kind of models. So, when we look at the foc of beta above, the fact that $foc=0$ implies that residual are uncorrelated with the covariates. Hence, we can estimate $\beta$'s from the foc although it is hard.
+\subsection*{C)Minimum Years for Consistency}
+Notes and Assumptions:
+\begin{itemize}
+\item $\alpha$: unobserved, time-constant
+\subitem Then, $E[\alpha_{i}|d_{it}] \neq 0$ implies that it is either $c$ (constant) or $f(d_{it})$ 
+\item $E[\epsilon_{it}| w_{it-1}, d_{it}, x_{it}, \alpha_{i}]=0$
+\end{itemize}
+As our main aim is to find minimum years required for consistency, I am choosing FD estimator. Then, consistency requires zero covariance between first difference in error term with first difference in covariates. Analytically,
+\begin{equation}
+w_{it}-w_{it-1} = (w_{it-1}-w_{it-2})\beta + (d_{it}-d_{it-1})\gamma + (x_{it}-x_{it-1})\delta + (\epsilon_{it}-\epsilon_{it-1}) \nonumber
+\end{equation}
+As $\alpha_{i}$ is the time invariant, it cancels out once we take the first difference. Now, define $a_{t}-a_{t-1}=\Delta a_{t}$ for every $a$ which is a generic term.
+Then,
+\begin{equation}
+\Delta w_{it} = \Delta w_{it-1}\beta + \Delta d_{it}\gamma + \Delta x_{it}\delta+\Delta \epsilon_{it}\nonumber
+\end{equation}
+Hence, the FD estimators are as follows:
+\begin{eqnarray}
+\hat{\beta}_{FD} &=& \left[\sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta w_{it-1} \right]^{-1}\sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta w_{it} \nonumber \\
+                 &=& \beta + \gamma \left[\sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta w_{it-1} \right]^{-1}\sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta d_{it} \nonumber \\
+                 &+& \delta \left[\sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta w_{it-1} \right]^{-1}\sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta x_{it} \nonumber \\
+                 &+&  \left[\sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta w_{it-1} \right]^{-1}\sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}' \Delta \epsilon_{it} \nonumber \\
+plim(\hat{\beta}_{FD}) &=& \beta + \gamma plim \left[\frac{1}{N}\sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta w_{it-1} \right]^{-1} plim\left[ \sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta d_{it} \right] \nonumber \\
+                       &+& \delta plim \left[\frac{1}{N} \sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta w_{it-1} \right]^{-1} plim\left[ \sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta x_{it} \right] \nonumber \\
+                       &+& plim \left[\frac{1}{N} \sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta w_{it-1} \right]^{-1} plim\left[ \sum\limits_{i=1}^{N}\sum\limits_{t=2}^{T} \Delta w_{it-1}'\Delta \epsilon_{it} \right] \label{line}
+\end{eqnarray}
+As the error term is serially uncorrelated and $E[\epsilon_{it}| w_{it-1}, d_{it}, x_{it}, \alpha_{i}]=0$ the last term on equation (\ref{line}) is zero. I assume there is no multicollinearity among the covariates hence second and third term are also equal to zero. Hence, by Slutsky Thm and LLN, the estimator is consistent. 
+
+Same assumptions also guarantees the consistency of $\hat{\gamma}_{FD}$ and $\hat{delta}_{FD}$. If I have time I am going to derive them too but for now I will skip this step as it is exactly what I did above. Now, the minimum number of years that is necessary for consistency is 3. Why? Because, it is necessary to take the first difference of all variables.
+
+\section*{PART 2: ECONOMETRIC RESEARCH DESIGN}
+Notes:
+\begin{itemize}
+\item Panel data
+\item FRR (Fatal risk rate) does not change over the time horizon a lot
+    \subitem does not necessarily mean that it is not changing at all
+\item There is individual heterogeneity which is job skill 
+   \subitem sign for fixed effect!
+   \subitem mechanism: high skill workers may choose low FRR jobs
+\item Most workers remain in the same ind (industry) and occ (occupation) throughout the study period
+\item effect of change in FRR on w (wages)
+\end{itemize}
+
+The equation I plan to estimate is the following:
+\begin{equation}
+w_{isgt}=edu_{isgt}\beta+skill_{i}+DFRR_{isgt}\alpha+FRR_{isgt}\psi+exp_{isgt}\gamma + ind_{gi}\theta + occ_{is}\phi+u_{isgt} \nonumber
+\end{equation}
+where,
+\begin{displaymath}
+   DFRR = \left\{
+     \begin{array}{lr}
+       1 &  if \textit{there is a change in FRR over the period}\\
+       0 &  if \textit{there is no change in FRR}
+     \end{array}
+   \right.
+\end{displaymath} 
+DFRR is a dummy variable as defined above. $i$ is an index for individuals, $g$ is index for occupation, $s$ is index for industry. The reason that that I used different indices for both ind. and occ is that FRR changes within the industries. $w$ is wages as expected, $edu$ is education, $skill$ is individually heterogeneous job skill, $exp$ is experience and lastly u is the error term. 
+
+The main reason that I choose the use DID estimation is the following: At first, I thought about using Fixed Effect estimation in order to get rid of omitted variable problem. However, for that FRR should change over time. What we know is it is changing but the rate of change is near zero. Hence, in order to grasp the exact effect of FRR on wages, DID estimation looks more plausible. Here the main question is, whether FRR is changing, if yes, how it affects wage differentials. There may be a case that although FRR is not changing over the time periods, it may change within the industries due to some exogenous shock. This can affect the wage rate within the industries. Or else, FRR may vary through time which bring about a change in the wages between industries. All these different sources of variation can easily be grasped by using DID estimation. In other words, by using the DID estimation, I am going to catch both within-groups and over-time-horizon effects.
+
+The main caveat about using DID estimation is the assumption of consistency of DID estimator. 
+\section*{PART 3: MULTI-SAMPLE GMM}
+\subsection*{A) Demonstration}
+\begin{eqnarray}
+\hat{\theta}_{2SGMM} &=& \underset{\theta \in \Theta}{\operatorname{argmin}} \frac{N_{1}}{N_{1}+N_{2}} Q_{1}(\theta)+ \frac{N_{2}}{N_{1}+N_{2}} Q_{2}(\theta) \nonumber \\
+Q_{1}(\theta)        &=& \left[\frac{1}{N_{1}} \sum\limits_{i=1}^{N_{1}} h_{1}(v_{i},\theta)\right]' W_{1}\left[\frac{1}{N_{1}} \sum\limits_{i=1}^{N_{1}} h_{1}(v_{i},\theta)\right] \nonumber \\
+Q_{2}(\theta)        &=& \left[\frac{1}{N_{2}} \sum\limits_{i=1}^{N_{2}} h_{2}(v_{i},\theta)\right]' W_{1}\left[\frac{1}{N_{2}} \sum\limits_{i=1}^{N_{2}} h_{2}(v_{i},\theta)\right] \nonumber 
+\end{eqnarray}
+Given the definitions of $g_{j}$ and $G_{j}$ in the question sheet, equation (3) in the question sheet follows. 
+\\
+By mean value theorem, 
+\begin{eqnarray}
+g_{1}(\hat{\theta}) &=& g_{1}(\hat{\theta}_{0}) + G_{1}(\theta^+)(\hat{\theta}-\theta_{0}) \nonumber \\
+g_{2}(\hat{\theta}) &=& g_{2}(\hat{\theta}_{0}) + G_{2}(\theta^+)(\hat{\theta}-\theta_{0})
+\nonumber \\
+N_{1}G_{1}(\hat{\theta})'W_{1}g_{1}(\hat{\theta}) &=& N_{1}G_{1}(\hat{\theta})'W_{1}g_{1}(\hat{\theta}_{0}) + N_{1}G_{1}(\hat{\theta})'W_{1}G_{1}(\theta^+)(\hat{\theta}-\theta_{0}) \label{d1} \\ 
+N_{2}G_{2}(\hat{\theta})'W_{2}g_{2}(\hat{\theta}) &=& N_{2}G_{2}(\hat{\theta})'W_{2}g_{2}(\hat{\theta}_{0}) + N_{2}G_{2}(\hat{\theta})'W_{2}G_{2}(\theta^+)(\hat{\theta}-\theta_{0}) \label{d2}
+\end{eqnarray}
+
+$(\ref{d1})+(\ref{d2})= 0$ by foc of $Q_{N}(\hat{\theta})$ implies that
+\small
+\begin{equation}
+\sqrt{N}(\hat{\theta}-\theta_{0}) = \left[N_{1}G_{1}(\hat{\theta})'W_{1}G_{1}(\theta^+)+N_{2}G_{2}(\hat{\theta})'W_{2}G_{2}(\theta^+) \right]^{-1} \sqrt{N}\left[N_{1}G_{1}(\hat{\theta})'W_{1}g_{1}(\hat{\theta}_{0})+ N_{2}G_{2}(\hat{\theta})'W_{2}g_{2}(\hat{\theta}_{0}) \right] \nonumber
+\end{equation}
+\normalsize
+Assuming the data are independent over i and $E[h_{i}(v,\theta)]=0$, by CLT $\sqrt{N}g_{i}(\theta_{0})$ converges in  distribution to $N(0,S)$.
+\\
+By assumptions $(A1)-(A5)+(A7)+(A9)+(A11)-(A12)$ in the handout "Asymptotic Properties of GMM Estimators", $G_{j}(\hat{\theta})$ and $G_{j}(\theta^+)$ converges to $G_{0}$
+\\
+After some simplifications, the result follows. (I will write later it if I have time and energy.) 
+
+\subsection*{B)}
+
+\begin{table} [h]
+%\caption{Effect of Health Risk on Housing Values}
+\centering
+  \begin{tabular}{ c | c | c | c }
+\hline\hline
+        . & (i) & (ii) & (iii) \\
+    Parameters & 1st Step & 2nd Step & Iterated \\ \hline
+        \alpha & 64.2729  & 64.2879  & 64.2879 \\
+        \gamma & 0.9393   & 1.0457   & 1.0457  \\
+        \beta  & -0.0295  & -0.9731  & -0.9731 \\
+        \delta & -0.2921  & 0.5600   & 0.5600   \\[1ex]
+\hline\hline
+  \end{tabular}
+\end{table}
+
+\subsubsection*{iii) Discussion}
+As we update the weights matrix, it converges to $\Omega^{-1}$. Hence, we can say that, the estimates become more efficient from $(i)$ to $(iii)$. In the graph, there is no difference between $(ii)$ and $(iii)$. This is because, in my calculations, I have reached the asymptotically efficient estimators faster. The reason may be the iteration restrictions I put on \textit{fminunc} command or the moment conditions I used. Additionally, the main reason that I used Quasi-Newton method is the fact that my objective function is differentiable. We have already learned that Quasi-Newton model gives more information about the curvature properties of the objective function.
+
+
+
+
+
+
+\end{document}
